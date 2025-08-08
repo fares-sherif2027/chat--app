@@ -53,7 +53,7 @@ public:
     string getStatus() const
     {
         // TODO: Implement getter
-        return "";
+        return status;
     }
 
     string getLastSeen() const
