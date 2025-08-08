@@ -40,7 +40,7 @@ public:
     string getUsername() const
     {
         // TODO: Implement getter
-        return "";
+        return username;
     }
 
     string getPhoneNumber() const
