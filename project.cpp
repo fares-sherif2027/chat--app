@@ -59,7 +59,7 @@ public:
     string getLastSeen() const
     {
         // TODO: Implement getter
-        return "";
+        return lastSeen;
     }
 
     void setStatus(string newStatus)
