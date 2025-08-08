@@ -46,8 +46,9 @@ public:
     string getPhoneNumber() const
     {
         // TODO: Implement getter
-        return "";
+        return phoneNumber;
     }
+
 
     string getStatus() const
     {
