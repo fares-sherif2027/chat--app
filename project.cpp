@@ -171,38 +171,79 @@ public:
     Chat()
     {
         // TODO: Implement default constructor
+        chatName = "";
     }
 
     Chat(vector<string> users, string name)
     {
         // TODO: Implement parameterized constructor
+        participants = users;
+        chatName = name;
     }
 
     void addMessage(const Message &msg)
     {
         // TODO: Implement message addition
+        messages.push_back(msg);
     }
 
     bool deleteMessage(int index, const string &username)
     {
-        // TODO: Implement message deletion
+
+        if (index < 0 || index >= messages.size())
+        {
+            return false;
+        }
+
+        if (messages[index].getSender() == username)
+        {
+            messages.erase(messages.begin() + index);
+            cout << username << " deleted the message" << endl;
+            return true;
+        }
         return false;
     }
 
     virtual void displayChat() const
     {
         // TODO: Implement chat display
+        for (int i = 0; i < messages.size(); i++)
+        {
+            cout << messages[i].getSender() << ": " << messages[i].getContent() << "[ " << messages[i].getTimestamp() << "]" << endl;
+        }
     }
 
     vector<Message> searchMessages(string keyword) const
     {
         // TODO: Implement message search
-        return {};
+        vector<Message> found;
+
+        for (int i = 0; i < messages.size(); i++)
+        {
+            string content = messages[i].getContent();
+            if (content.find(keyword) != string::npos) // npos here means not found like when we return -1
+            {
+                found.push_back(messages[i]);
+            }
+        }
+        if (found.size() == 0)
+        {
+            found.push_back(Message("System", "No results found")); // here the system replies when there are no found results,the first parameter is sender and second is content
+        }
+        return found;
     }
 
     void exportToFile(const string &filename) const
     {
         // TODO: Implement export to file
+        cout << " BEGIN FILE: " << filename << endl;
+
+        for (int i = 0; i < messages.size(); ++i)
+        {
+            cout << messages[i].getSender() << ": " << messages[i].getContent() << "\n";
+        }
+
+        cout << " END FILE: " << filename << endl;
     }
 };
 
