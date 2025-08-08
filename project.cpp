@@ -25,40 +25,45 @@ public:
     User(string uname, string pwd, string phone)
     {
         // TODO: Implement parameterized constructor
+        uname=username;
+        pwd=password;
+        phone=phoneNumber;
     }
 
     string getUsername() const
     {
         // TODO: Implement getter
-        return "";
+        return username;
     }
 
     string getPhoneNumber() const
     {
         // TODO: Implement getter
-        return "";
+        return phoneNumber;
     }
 
     string getStatus() const
     {
         // TODO: Implement getter
-        return "";
+        return status;
     }
 
     string getLastSeen() const
     {
         // TODO: Implement getter
-        return "";
+        return lastSeen;
     }
 
     void setStatus(string newStatus)
     {
         // TODO: Implement setter
+        newStatus=status;
     }
 
     void setPhoneNumber(string phone)
     {
         // TODO: Implement setter
+        phone=phoneNumber;
     }
 
     void updateLastSeen()
@@ -69,12 +74,19 @@ public:
     bool checkPassword(string pwd) const
     {
         // TODO: Implement password check
-        return false;
+        if(pwd==password)
+            {
+                return true;
+            }
+        else{
+            return false;
+        }
     }
 
     void changePassword(string newPwd)
     {
         // TODO: Implement password change
+        newPwd=password;
     }
 };
 
