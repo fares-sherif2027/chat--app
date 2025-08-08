@@ -1,7 +1,8 @@
-﻿#include <iostream>
+#include <iostream>
 #include <vector>
 #include <string>
 #include <ctime>
+#include <algorithm>
 using namespace std;
 
 // ========================
@@ -93,40 +94,36 @@ private:
 public:
     Message()
     {
-        sender = "";
-        ccontent = "";
-        timestamp - ""；
-            Status = "";
+        // TODO: Implement default constructor
     }
 
     Message(string sndr, string cntnt)
     {
-        sender = sndr;
-        content = cntnt;
+        // TODO: Implement parameterized constructor
     }
 
     string getContent() const
     {
         // TODO: Implement getter
-        return "Content";
+        return "";
     }
 
     string getSender() const
     {
         // TODO: Implement getter
-        return "Sender";
+        return "";
     }
 
     string getTimestamp() const
     {
         // TODO: Implement getter
-        return "Timestamp";
+        return "";
     }
 
     string getStatus() const
     {
         // TODO: Implement getter
-        return "Status";
+        return "";
     }
 
     Message* getReplyTo() const
@@ -137,34 +134,27 @@ public:
 
     void setStatus(string newStatus)
     {
-        Status = newStatus;
+        // TODO: Implement setter
     }
 
     void setReplyTo(Message* msg)
     {
-        ReplyTo = msg;
+        // TODO: Implement setter
     }
 
     void updateTimestamp()
     {
-        time_t now = time(0);
-        char* dt = ctime(&now);
-        timestamp = dt;
-        if (!timestamp.empty() && timestamp[timestamp.size() - 1] == '\n')
-            timestamp.pop_back();
+        // TODO: Implement timestamp update
     }
 
     void display() const
     {
-        cout << "sender:" << sender << "|" << "status:" << status << "|" << "timestamp:" << timestamp << "|" << "content:" << content << endl;
+        // TODO: Implement message display
     }
 
     void addEmoji(string emojiCode)
     {
-        if (emojiCode == 1) content += u8"\U0001F600";
-        else if (emojiCode == 2) content += u8"\U0001F602";
-        else if (emojiCode = 3) content += u8"\U0001F609";
-        else content += u8"\u2764";
+        // TODO: Implement emoji support
     }
 };
 
@@ -287,7 +277,6 @@ public:
         cout << username << " is typing..." << endl;
     }
 };
-
 // ========================
 //      GROUP CHAT CLASS
 // ========================
@@ -300,45 +289,85 @@ private:
 public:
     GroupChat(vector<string> users, string name, string creator)
     {
-        // TODO: Implement constructor
+        participants = users;
+        chatName = name;
+        admins.push_back(creator);
+        description = "No description set.";
     }
 
     void addAdmin(string newAdmin)
     {
-        // TODO: Implement add admin
+        if (isParticipant(newAdmin) && !isAdmin(newAdmin))
+        {
+            admins.push_back(newAdmin);
+            cout << newAdmin << " has been promoted to admin.\n";
+        }
     }
 
     bool removeParticipant(const string& admin, const string& userToRemove)
     {
-        // TODO: Implement remove participant
-        return false;
+        if (!isAdmin(admin))
+        {
+            cout << "Only admins can remove participants.\n";
+            return false;
+        }
+
+        auto it = find(participants.begin(), participants.end(), userToRemove);
+        if (it != participants.end())
+        {
+            participants.erase(it);
+            cout << userToRemove << " has been removed from the group by " << admin << ".\n";
+
+            // Also remove from admin list if applicable
+            auto adminIt = find(admins.begin(), admins.end(), userToRemove);
+            if (adminIt != admins.end())
+                admins.erase(adminIt);
+
+            return true;
+        }
+        else
+        {
+            cout << "User not found in group.\n";
+            return false;
+        }
     }
 
     bool isAdmin(string username) const
     {
-        // TODO: Implement admin check
-        return false;
+        return find(admins.begin(), admins.end(), username) != admins.end();
     }
 
     bool isParticipant(string username) const
     {
-        // TODO: Implement participant check
-        return false;
+        return find(participants.begin(), participants.end(), username) != participants.end();
     }
 
     void setDescription(string desc)
     {
-        // TODO: Implement set description
+        description = desc;
     }
 
     void displayChat() const override
     {
-        // TODO: Implement group chat display
+        cout << "Group: " << chatName << "\nDescription: " << description << "\nParticipants:\n";
+        for (const auto& user : participants)
+        {
+            cout << "- " << user;
+            if (isAdmin(user)) cout << " (admin)";
+            cout << "\n";
+        }
+
+        cout << "\n--- Messages ---\n";
+        for (int i = 0; i < messages.size(); i++)
+        {
+            cout << i << ": " << messages[i].getSender() << " - " << messages[i].getContent()
+                 << " [" << messages[i].getTimestamp() << "]\n";
+        }
     }
 
     void sendJoinRequest(const string& username)
     {
-        // TODO: Implement join request
+        cout << username << " has requested to join the group \"" << chatName << "\".\n";
     }
 };
 
