@@ -287,87 +287,150 @@ private:
     string description;
 
 public:
-    GroupChat(vector<string> users, string name, string creator)
+    GroupChat(vector<string> users, string name, string creator) : Chat(users, name)
     {
-        participants = users;
-        chatName = name;
+        bool found = false;
+        for (int i = 0; i < participants.size(); ++i)
+        {
+            if (participants[i] == creator)
+            {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+            participants.push_back(creator);
+
         admins.push_back(creator);
-        description = "No description set.";
+        description = "";
     }
 
     void addAdmin(string newAdmin)
     {
-        if (isParticipant(newAdmin) && !isAdmin(newAdmin))
+        if (!isParticipant(newAdmin))
         {
-            admins.push_back(newAdmin);
-            cout << newAdmin << " has been promoted to admin.\n";
+            cout << "Cannot make " << newAdmin << " an admin because they are not a participant." << endl;
+            return;
         }
+        if (isAdmin(newAdmin))
+        {
+            cout << newAdmin << " is already an admin." << endl;
+            return;
+        }
+        admins.push_back(newAdmin);
+        cout << newAdmin << " is now an admin." << endl;
     }
 
     bool removeParticipant(const string& admin, const string& userToRemove)
     {
         if (!isAdmin(admin))
         {
-            cout << "Only admins can remove participants.\n";
+            cout << admin << " is not an admin and cannot remove participants." << endl;
             return false;
         }
 
-        auto it = find(participants.begin(), participants.end(), userToRemove);
-        if (it != participants.end())
+        if (admin == userToRemove)
         {
-            participants.erase(it);
-            cout << userToRemove << " has been removed from the group by " << admin << ".\n";
-
-            // Also remove from admin list if applicable
-            auto adminIt = find(admins.begin(), admins.end(), userToRemove);
-            if (adminIt != admins.end())
-                admins.erase(adminIt);
-
-            return true;
-        }
-        else
-        {
-            cout << "User not found in group.\n";
+            cout << "Admin cannot remove themselves." << endl;
             return false;
         }
+
+        int idx = -1;
+        for (int i = 0; i < participants.size(); ++i)
+        {
+            if (participants[i] == userToRemove)
+            {
+                idx = i;
+                break;
+            }
+        }
+        if (idx == -1)
+        {
+            cout << userToRemove << " is not a participant." << endl;
+            return false;
+        }
+
+        participants.erase(participants.begin() + idx);
+
+        
+        for (int i = 0; i < admins.size(); ++i)
+        {
+            if (admins[i] == userToRemove)
+            {
+                admins.erase(admins.begin() + i);
+                break;
+            }
+        }
+
+        cout << userToRemove << " has been removed from the group by " << admin << "." << endl;
+        return true;
     }
 
     bool isAdmin(string username) const
     {
-        return find(admins.begin(), admins.end(), username) != admins.end();
+        for (int i = 0; i < admins.size(); ++i)
+        {
+            if (admins[i] == username)
+                return true;
+        }
+        return false;
     }
 
     bool isParticipant(string username) const
     {
-        return find(participants.begin(), participants.end(), username) != participants.end();
+        for (int i = 0; i < participants.size(); ++i)
+        {
+            if (participants[i] == username)
+                return true;
+        }
+        return false;
     }
 
     void setDescription(string desc)
     {
         description = desc;
+        cout << "Group description updated." << endl;
     }
 
     void displayChat() const override
     {
-        cout << "Group: " << chatName << "\nDescription: " << description << "\nParticipants:\n";
-        for (const auto& user : participants)
-        {
-            cout << "- " << user;
-            if (isAdmin(user)) cout << " (admin)";
-            cout << "\n";
-        }
+        cout << "=== Group: " << chatName << " ===" << endl;
+        cout << "Description: " << (description.empty() ? "(no description)" : description) << endl;
 
-        cout << "\n--- Messages ---\n";
-        for (int i = 0; i < messages.size(); i++)
+        cout << "Participants (" << participants.size() << "): ";
+        for (int i = 0; i < participants.size(); ++i)
         {
-            cout << i << ": " << messages[i].getSender() << " - " << messages[i].getContent()
-                 << " [" << messages[i].getTimestamp() << "]\n";
+            cout << participants[i];
+            if (i != participants.size() - 1) cout << ", ";
+        }
+        cout << endl;
+
+        cout << "Admins (" << admins.size() << "): ";
+        for (int i = 0; i < admins.size(); ++i)
+        {
+            cout << admins[i];
+            if (i != admins.size() - 1) cout << ", ";
+        }
+        cout << endl;
+
+        cout << "Messages:" << endl;
+        for (int i = 0; i < messages.size(); ++i)
+        {
+            cout << i << " : " << messages[i].getSender() << " : " << messages[i].getContent() << " [" << messages[i].getTimestamp() << "]" << endl;
         }
     }
 
     void sendJoinRequest(const string& username)
     {
-        cout << username << " has requested to join the group \"" << chatName << "\".\n";
+        if (isParticipant(username))
+        {
+            cout << username << " is already a participant." << endl;
+            return;
+        }
+
+        participants.push_back(username);
+        cout << username << " has joined the group (via join request)." << endl;
+
     }
 };
 
