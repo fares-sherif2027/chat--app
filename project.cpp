@@ -88,7 +88,7 @@ private:
     string content;
     string timestamp;
     string status;
-    Message *replyTo;
+    Message* replyTo;
 
 public:
     Message()
@@ -125,7 +125,7 @@ public:
         return "";
     }
 
-    Message *getReplyTo() const
+    Message* getReplyTo() const
     {
         // TODO: Implement getter
         return nullptr;
@@ -136,7 +136,7 @@ public:
         // TODO: Implement setter
     }
 
-    void setReplyTo(Message *msg)
+    void setReplyTo(Message* msg)
     {
         // TODO: Implement setter
     }
@@ -178,12 +178,12 @@ public:
         // TODO: Implement parameterized constructor
     }
 
-    void addMessage(const Message &msg)
+    void addMessage(const Message& msg)
     {
         // TODO: Implement message addition
     }
 
-    bool deleteMessage(int index, const string &username)
+    bool deleteMessage(int index, const string& username)
     {
         // TODO: Implement message deletion
         return false;
@@ -200,7 +200,7 @@ public:
         return {};
     }
 
-    void exportToFile(const string &filename) const
+    void exportToFile(const string& filename) const
     {
         // TODO: Implement export to file
     }
@@ -218,17 +218,21 @@ private:
 public:
     PrivateChat(string u1, string u2)
     {
-        // TODO: Implement constructor
+        user1 = u1;
+        user2 = u2;
     }
 
     void displayChat() const override
     {
-        // TODO: Implement private chat display
+        for (int i = 0; i < messages.size(); i++)
+        {
+            cout << i << "    :   " << messages[i].getSender() << "    " << messages[i].getContent() << "    " << messages[i].getTimestamp() << endl;
+        }
     }
 
-    void showTypingIndicator(const string &username) const
+    void showTypingIndicator(const string& username) const
     {
-        // TODO: Implement typing indicator
+        cout << username << " is typing..." << endl;
     }
 };
 
@@ -252,7 +256,7 @@ public:
         // TODO: Implement add admin
     }
 
-    bool removeParticipant(const string &admin, const string &userToRemove)
+    bool removeParticipant(const string& admin, const string& userToRemove)
     {
         // TODO: Implement remove participant
         return false;
@@ -280,7 +284,7 @@ public:
         // TODO: Implement group chat display
     }
 
-    void sendJoinRequest(const string &username)
+    void sendJoinRequest(const string& username)
     {
         // TODO: Implement join request
     }
@@ -293,26 +297,39 @@ class WhatsApp
 {
 private:
     vector<User> users;
-    vector<Chat *> chats;
+    vector<Chat*> chats;
     int currentUserIndex;
 
     int findUserIndex(string username) const
     {
-        // TODO: Implement user search
+        for (int i = 0; i < users.size(); i++)
+        {
+            if (users[i].getUsername() == username)
+            {
+                return i;
+            }
+        }
         return -1;
     }
 
     bool isLoggedIn() const
     {
-        // TODO: Implement login check
-        return false;
+        if (currentUserIndex == -1)
+        {
+            return false;
+        }
+        return true;
     }
 
     string getCurrentUsername() const
     {
-        // TODO: Implement get current user
+        if (currentUserIndex != -1)
+        {
+            return users[currentUserIndex].getUsername();
+        }
         return "";
     }
+
 
 public:
     WhatsApp() : currentUserIndex(-1) {}
