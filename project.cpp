@@ -65,7 +65,9 @@ public:
     void setStatus(string newStatus)
     {
         // TODO: Implement setter
+        status=newStatus;
     }
+
 
     void setPhoneNumber(string phone)
     {
