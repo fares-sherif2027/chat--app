@@ -116,9 +116,9 @@ public:
     Message()
     {
         sender = "";
-        ccontent = "";
-        timestamp - ""；
-            Status = "";
+        content = "";
+        timestamp = "";
+            status = "";
     }
 
     Message(string sndr, string cntnt)
@@ -159,12 +159,12 @@ public:
 
     void setStatus(string newStatus)
     {
-        Status = newStatus;
+        status = newStatus;
     }
 
     void setReplyTo(Message* msg)
     {
-        ReplyTo = msg;
+        replyTo = msg;
     }
 
     void updateTimestamp()
@@ -181,7 +181,7 @@ public:
         cout << "sender:" << sender << "|" << "status:" << status << "|" << "timestamp:" << timestamp << "|" << "content:" << content << endl;
     }
 
-    void addEmoji(string emojiCode)
+    void addEmoji(int emojiCode)
     {
         if (emojiCode == 1) content += u8"\U0001F600";
         else if (emojiCode == 2) content += u8"\U0001F602";
