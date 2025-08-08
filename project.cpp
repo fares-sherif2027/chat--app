@@ -80,16 +80,24 @@ public:
         // TODO: Implement last seen update
     }
 
-    bool checkPassword(string pwd) const
+     bool checkPassword(string pwd) const
     {
         // TODO: Implement password check
-        return false;
+        if(pwd==password)
+            {
+                return true;
+            }
+        else{
+            return false;
+        }
     }
 
-    void changePassword(string newPwd)
+     void changePassword(string newPwd)
     {
         // TODO: Implement password change
+        password=newPwd;
     }
+
 };
 
 // ========================
