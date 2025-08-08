@@ -72,6 +72,7 @@ public:
     void setPhoneNumber(string phone)
     {
         // TODO: Implement setter
+        phoneNumber=phone;
     }
 
     void updateLastSeen()
