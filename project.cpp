@@ -161,11 +161,10 @@ public:
 
     void addEmoji(string emojiCode)
     {
-        if (emojiCode == ":)") content += "😂";
-        else if (emojiCode == ":(") content += "🥹";
-        else if (emojiCode = ":D") content += "❤";
-        else if (emojiCode = "<3") content += "🥲";
-        else content += "?";
+        if (emojiCode == 1) content += u8"\U0001F600";
+        else if (emojiCode == 2) content += u8"\U0001F602";
+        else if (emojiCode = 3) content += u8"\U0001F609";
+        else content += u8"\u2764";
     }
 };
 
