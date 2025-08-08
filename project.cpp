@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 #include <string>
 #include <ctime>
@@ -93,36 +93,40 @@ private:
 public:
     Message()
     {
-        // TODO: Implement default constructor
+        sender = "";
+        ccontent = "";
+        timestamp - ""；
+            Status = "";
     }
 
     Message(string sndr, string cntnt)
     {
-        // TODO: Implement parameterized constructor
+        sender = sndr;
+        content = cntnt;
     }
 
     string getContent() const
     {
         // TODO: Implement getter
-        return "";
+        return "Content";
     }
 
     string getSender() const
     {
         // TODO: Implement getter
-        return "";
+        return "Sender";
     }
 
     string getTimestamp() const
     {
         // TODO: Implement getter
-        return "";
+        return "Timestamp";
     }
 
     string getStatus() const
     {
         // TODO: Implement getter
-        return "";
+        return "Status";
     }
 
     Message* getReplyTo() const
@@ -133,27 +137,34 @@ public:
 
     void setStatus(string newStatus)
     {
-        // TODO: Implement setter
+        Status = newStatus;
     }
 
     void setReplyTo(Message* msg)
     {
-        // TODO: Implement setter
+        ReplyTo = msg;
     }
 
     void updateTimestamp()
     {
-        // TODO: Implement timestamp update
+        time_t now = time(0);
+        char* dt = ctime(&now);
+        timestamp = dt;
+        if (!timestamp.empty() && timestamp[timestamp.size() - 1] == '\n')
+            timestamp.pop_back();
     }
 
     void display() const
     {
-        // TODO: Implement message display
+        cout << "sender:" << sender << "|" << "status:" << status << "|" << "timestamp:" << timestamp << "|" << "content:" << content << endl;
     }
 
     void addEmoji(string emojiCode)
     {
-        // TODO: Implement emoji support
+        if (emojiCode == 1) content += u8"\U0001F600";
+        else if (emojiCode == 2) content += u8"\U0001F602";
+        else if (emojiCode = 3) content += u8"\U0001F609";
+        else content += u8"\u2764";
     }
 };
 
