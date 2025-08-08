@@ -20,45 +20,59 @@ public:
     User()
     {
         // TODO: Implement default constructor
+         username="";
+         password="";
+         phoneNumber="";
+         status="";
+         lastSeen="";
+
     }
 
     User(string uname, string pwd, string phone)
     {
         // TODO: Implement parameterized constructor
+        username=uname;
+        password=pwd;
+        phoneNumber=phone;
     }
+
 
     string getUsername() const
     {
         // TODO: Implement getter
-        return "";
+        return username;
     }
 
     string getPhoneNumber() const
     {
         // TODO: Implement getter
-        return "";
+        return phoneNumber;
     }
+
 
     string getStatus() const
     {
         // TODO: Implement getter
-        return "";
+        return status;
     }
 
     string getLastSeen() const
     {
         // TODO: Implement getter
-        return "";
+        return lastSeen;
     }
 
     void setStatus(string newStatus)
     {
         // TODO: Implement setter
+        status=newStatus;
     }
+
 
     void setPhoneNumber(string phone)
     {
         // TODO: Implement setter
+        phoneNumber=phone;
     }
 
     void updateLastSeen()
@@ -66,16 +80,24 @@ public:
         // TODO: Implement last seen update
     }
 
-    bool checkPassword(string pwd) const
+     bool checkPassword(string pwd) const
     {
         // TODO: Implement password check
-        return false;
+        if(pwd==password)
+            {
+                return true;
+            }
+        else{
+            return false;
+        }
     }
 
-    void changePassword(string newPwd)
+     void changePassword(string newPwd)
     {
         // TODO: Implement password change
+        password=newPwd;
     }
+
 };
 
 // ========================
