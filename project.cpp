@@ -1,7 +1,10 @@
+
+
 #include <iostream>
 #include <vector>
 #include <string>
 #include <ctime>
+
 using namespace std;
 
 // ========================
@@ -20,22 +23,20 @@ public:
     User()
     {
         // TODO: Implement default constructor
-         username="";
-         password="";
-         phoneNumber="";
-         status="";
-         lastSeen="";
-
+        username = "";
+        password = "";
+        phoneNumber = "";
+        status = "";
+        lastSeen = "";
     }
 
     User(string uname, string pwd, string phone)
     {
         // TODO: Implement parameterized constructor
-        username=uname;
-        password=pwd;
-        phoneNumber=phone;
+        username = uname;
+        password = pwd;
+        phoneNumber = phone;
     }
-
 
     string getUsername() const
     {
@@ -48,7 +49,6 @@ public:
         // TODO: Implement getter
         return phoneNumber;
     }
-
 
     string getStatus() const
     {
@@ -65,42 +65,42 @@ public:
     void setStatus(string newStatus)
     {
         // TODO: Implement setter
-        status=newStatus;
+        status = newStatus;
     }
-
 
     void setPhoneNumber(string phone)
     {
         // TODO: Implement setter
-        phoneNumber=phone;
+        phoneNumber = phone;
     }
 
     void updateLastSeen()
     {
         // TODO: Implement last seen update
-        time_t timestamp;
-        time(&timestamp);
-        cout << ctime(&timestamp);
+        time_t now = time(0);
+        char buffer[26];
+        ctime_s(buffer, sizeof(buffer), &now);
+        lastSeen = string(buffer);
     }
 
-     bool checkPassword(string pwd) const
+    bool checkPassword(string pwd) const
     {
         // TODO: Implement password check
-        if(pwd==password)
-            {
-                return true;
-            }
-        else{
+        if (pwd == password)
+        {
+            return true;
+        }
+        else
+        {
             return false;
         }
     }
 
-     void changePassword(string newPwd)
+    void changePassword(string newPwd)
     {
         // TODO: Implement password change
-        password=newPwd;
+        password = newPwd;
     }
-
 };
 
 // ========================
@@ -113,7 +113,7 @@ private:
     string content;
     string timestamp;
     string status;
-    Message* replyTo;
+    Message *replyTo;
 
 public:
     Message()
@@ -121,7 +121,7 @@ public:
         sender = "";
         content = "";
         timestamp = "";
-            status = "";
+        status = "";
     }
 
     Message(string sndr, string cntnt)
@@ -133,28 +133,28 @@ public:
     string getContent() const
     {
         // TODO: Implement getter
-        return "Content";
+        return content;
     }
 
     string getSender() const
     {
         // TODO: Implement getter
-        return "Sender";
+        return sender;
     }
 
     string getTimestamp() const
     {
         // TODO: Implement getter
-        return "Timestamp";
+        return timestamp;
     }
 
     string getStatus() const
     {
         // TODO: Implement getter
-        return "Status";
+        return status;
     }
 
-    Message* getReplyTo() const
+    Message *getReplyTo() const
     {
         // TODO: Implement getter
         return nullptr;
@@ -165,7 +165,7 @@ public:
         status = newStatus;
     }
 
-    void setReplyTo(Message* msg)
+    void setReplyTo(Message *msg)
     {
         replyTo = msg;
     }
@@ -173,9 +173,10 @@ public:
     void updateTimestamp()
     {
         time_t now = time(0);
-        char* dt = ctime(&now);
-        timestamp = dt;
-        if (!timestamp.empty() && timestamp[timestamp.size() - 1] == '\n')
+        char buffer[26];                       // ctime_s requires at least 26 characters
+        ctime_s(buffer, sizeof(buffer), &now); // safe version of ctime
+        timestamp = buffer;
+        if (!timestamp.empty() && timestamp.back() == '\n')
             timestamp.pop_back();
     }
 
@@ -186,13 +187,16 @@ public:
 
     void addEmoji(int emojiCode)
     {
-        if (emojiCode == 1) content += u8"\U0001F600";
-        else if (emojiCode == 2) content += u8"\U0001F602";
-        else if (emojiCode = 3) content += u8"\U0001F609";
-        else content += u8"\u2764";
+        if (emojiCode == 1)
+            content += u8"\U0001F600"; // happy emoji
+        else if (emojiCode == 2)
+            content += u8"\U0001F602"; // sympathy emoji
+        else if (emojiCode = 3)
+            content += u8"\U0001F609"; // heart emoji
+        else
+            content += u8"\u2764";
     }
 };
-
 
 // ========================
 //       CHAT CLASS (BASE)
@@ -218,13 +222,23 @@ public:
         chatName = name;
     }
 
-    void addMessage(const Message& msg)
+    vector<Message> &getMessages()
+    {
+        return messages;
+    }
+
+    vector<string> &getParticipants()
+    {
+        return participants;
+    }
+
+    void addMessage(const Message &msg)
     {
         // TODO: Implement message addition
         messages.push_back(msg);
     }
 
-    bool deleteMessage(int index, const string& username)
+    bool deleteMessage(int index, const string &username)
     {
 
         if (index < 0 || index >= messages.size())
@@ -270,7 +284,7 @@ public:
         return found;
     }
 
-    void exportToFile(const string& filename) const
+    void exportToFile(const string &filename) const
     {
         // TODO: Implement export to file
         cout << " BEGIN FILE: " << filename << endl;
@@ -300,15 +314,42 @@ public:
         user2 = u2;
     }
 
+    string getUser1()
+    {
+        return user1;
+    }
+
+    string getUser2()
+    {
+        return user2;
+    }
+
     void displayChat() const override
     {
-        for (int i = 0; i < messages.size(); i++)
+        cout << "=== Private Chat: " << user1 + "   " + user2 << " ===" << endl;
+
+        cout << endl;
+
+        // Show messages
+        cout << "Messages:" << endl;
+        if (messages.empty())
         {
-            cout << i << "    :   " << messages[i].getSender() << "    " << messages[i].getContent() << "    " << messages[i].getTimestamp() << endl;
+            cout << "(no messages yet)" << endl;
+        }
+        else
+        {
+            for (size_t i = 0; i < messages.size(); ++i)
+            {
+                cout << i << " : "
+                     << messages[i].getSender()
+                     << " : " << messages[i].getContent()
+                     << " [" << messages[i].getTimestamp() << "]"
+                     << endl;
+            }
         }
     }
 
-    void showTypingIndicator(const string& username) const
+    void showTypingIndicator(const string &username) const
     {
         cout << username << " is typing..." << endl;
     }
@@ -357,7 +398,7 @@ public:
         cout << newAdmin << " is now an admin." << endl;
     }
 
-    bool removeParticipant(const string& admin, const string& userToRemove)
+    bool removeParticipant(const string &admin, const string &userToRemove)
     {
         if (!isAdmin(admin))
         {
@@ -387,7 +428,6 @@ public:
         }
 
         participants.erase(participants.begin() + idx);
-
 
         for (int i = 0; i < admins.size(); ++i)
         {
@@ -434,29 +474,40 @@ public:
         cout << "Description: " << (description.empty() ? "(no description)" : description) << endl;
 
         cout << "Participants (" << participants.size() << "): ";
-        for (int i = 0; i < participants.size(); ++i)
+        for (size_t i = 0; i < participants.size(); ++i)
         {
             cout << participants[i];
-            if (i != participants.size() - 1) cout << ", ";
+            if (i != participants.size() - 1)
+                cout << ", ";
         }
         cout << endl;
 
         cout << "Admins (" << admins.size() << "): ";
-        for (int i = 0; i < admins.size(); ++i)
+        for (size_t i = 0; i < admins.size(); ++i)
         {
             cout << admins[i];
-            if (i != admins.size() - 1) cout << ", ";
+            if (i != admins.size() - 1)
+                cout << ", ";
         }
         cout << endl;
 
         cout << "Messages:" << endl;
-        for (int i = 0; i < messages.size(); ++i)
+        if (messages.empty())
         {
-            cout << i << " : " << messages[i].getSender() << " : " << messages[i].getContent() << " [" << messages[i].getTimestamp() << "]" << endl;
+            cout << "(no messages yet)" << endl;
+        }
+        else
+        {
+            for (size_t i = 0; i < messages.size(); ++i)
+            {
+                cout << (i + 1) << " : " << messages[i].getSender()
+                     << " : " << messages[i].getContent()
+                     << " [" << messages[i].getTimestamp() << "]" << endl;
+            }
         }
     }
 
-    void sendJoinRequest(const string& username)
+    void sendJoinRequest(const string &username)
     {
         if (isParticipant(username))
         {
@@ -466,18 +517,17 @@ public:
 
         participants.push_back(username);
         cout << username << " has joined the group (via join request)." << endl;
-
     }
 };
 
 // ========================
 //    WHATSAPP APP CLASS
 // ========================
- class WhatsApp
+class WhatsApp
 {
 private:
     vector<User> users;
-    vector<Chat*> chats;
+    vector<Chat *> chats;
     int currentUserIndex;
 
     int findUserIndex(string username) const
@@ -510,8 +560,7 @@ private:
         return "";
     }
 
-
- public:
+public:
     WhatsApp() : currentUserIndex(-1) {}
 
     void signUp()
@@ -573,7 +622,7 @@ private:
             return;
         }
 
-        PrivateChat* newChat = new PrivateChat(getCurrentUsername(), otherUser);
+        PrivateChat *newChat = new PrivateChat(getCurrentUsername(), otherUser);
         chats.push_back(newChat);
 
         cout << "Private chat started with " << otherUser << ".\n";
@@ -615,7 +664,7 @@ private:
             }
         }
 
-        GroupChat* group = new GroupChat(members, groupName, getCurrentUsername());
+        GroupChat *group = new GroupChat(members, groupName, getCurrentUsername());
         chats.push_back(group);
 
         cout << "Group '" << groupName << "' created successfully!\n";
@@ -629,18 +678,279 @@ private:
             return;
         }
 
+        string loggedInUser = users[currentUserIndex].getUsername();
+
         if (chats.empty())
         {
             cout << "No chats available.\n";
             return;
         }
 
+        vector<int> visibleIndexes;
         cout << "Your chats:\n";
-        for (size_t i = 0; i < chats.size(); i++)
+        int displayNum = 1;
+
+        // Show only chats where the logged-in(currentUserIndex) user is in participants (group) or matches user1/user2 (private)
+        for (int i = 0; i < chats.size(); i++)
         {
-            cout << i + 1 << ". ";
-            chats[i]->displayChat();
-            cout << "----------------------\n";
+            bool showChat = false;
+
+            if (GroupChat *groupChat = dynamic_cast<GroupChat *>(chats[i])) // pointer that checks if groupchat and return the chat if not return null
+            {
+                const vector<string> &participants = groupChat->getParticipants();
+                bool found = false;
+                for (int i = 0; i < participants.size(); i++)
+                {
+                    if (participants[i] == loggedInUser)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    cout << "Error: User is not a participant in the group.\n";
+                    break;
+                }
+                showChat = true;
+            }
+            else if (PrivateChat *privateChat = dynamic_cast<PrivateChat *>(chats[i])) // pointer that checks if privatechat and return the chat if not return null
+            {
+                if (privateChat->getUser1() == loggedInUser || privateChat->getUser2() == loggedInUser)
+                    showChat = true;
+            }
+
+            if (showChat)
+            {
+                visibleIndexes.push_back(i); // its index is the visible index to user (but as 1-indexed) and the values are the actual index in chats
+                cout << displayNum++ << ". ";
+                chats[i]->displayChat();
+                cout << "----------------------\n\n\n\n";
+            }
+        }
+
+        if (visibleIndexes.empty())
+        {
+            cout << "You are not part of any chats.\n";
+            return;
+        }
+
+        int choice;
+        cout << "Choose chat by index or exit (0): ";
+        cin >> choice;
+        if (choice == 0)
+            return;
+
+        if (choice < 1 || choice > (int)visibleIndexes.size())
+        {
+            cout << "Invalid chat index.\n";
+            return;
+        }
+
+        Chat *selectedChat = chats[visibleIndexes[choice - 1]]; // the user choose the visible index and it is called using the actual index in chats
+
+        while (true)
+        {
+            bool isGroup = dynamic_cast<GroupChat *>(selectedChat) != nullptr; // checks if this chat is group(true) or private(false)
+            bool isAdmin = false;
+
+            if (isGroup)
+            {
+                GroupChat *groupChat = dynamic_cast<GroupChat *>(selectedChat);
+                isAdmin = groupChat->isAdmin(loggedInUser);
+            }
+
+            cout << "\nOptions:\n";
+            cout << "1- Add message\n";
+            cout << "2- Delete message\n";
+
+            // Group chat admin options
+            if (isGroup && isAdmin) // only apppear if it is groupchat amd the user is admin and participant
+            {
+                cout << "3- Add Admin\n";
+                cout << "4- Set Description\n";
+                cout << "5- Remove Participant\n";
+            }
+
+            cout << "0- Exit\n";
+            cout << "Choice: ";
+
+            int menuChoice;
+            cin >> menuChoice;
+
+            if (menuChoice == 0)
+                break;
+
+            switch (menuChoice)
+            {
+            case 1:
+            { // Add message
+                string content;
+                cout << "Enter message content: ";
+                cin >> ws;
+                getline(cin, content);
+
+                Message newMsg(loggedInUser, content);
+                newMsg.updateTimestamp();
+                newMsg.setStatus("sent");
+                selectedChat->addMessage(newMsg);
+
+                cout << "Message added by " << loggedInUser << ".\n";
+                break;
+            }
+
+            case 2:
+            { // Delete message
+                int msgIndex;
+                cout << "Enter message index to delete-1: ";
+                cin >> msgIndex;
+
+                if (msgIndex < 0 || msgIndex >= (int)selectedChat->getMessages().size())
+                {
+                    cout << "Invalid message index.\n";
+                }
+                else
+                {
+                    const Message &msg = selectedChat->getMessages()[msgIndex];
+                    bool canDelete = false;
+
+                    if (!isGroup) // Not a group chat (delete message only if you were the sender)
+                    {
+                        if (msg.getSender() == loggedInUser)
+                        {
+                            canDelete = true;
+                        }
+                    }
+                    else // It is a group chat (delete message if you were the sender or an admin)
+                    {
+                        if (msg.getSender() == loggedInUser || isAdmin)
+                        {
+                            canDelete = true;
+                        }
+                    }
+
+                    if (canDelete)
+                    {
+                        selectedChat->deleteMessage(msgIndex, msg.getSender());
+                        cout << "Message deleted.\n";
+                    }
+                    else
+                    {
+                        cout << "You don't have permission to delete this message.\n";
+                    }
+                }
+                break;
+            }
+
+            case 3:
+            { // Add admin
+                if (isGroup && isAdmin)
+                {
+                    GroupChat *groupChat = dynamic_cast<GroupChat *>(selectedChat);
+                    string newAdmin;
+                    cout << "Enter username to add as admin: ";
+                    cin >> ws;
+                    getline(cin, newAdmin);
+
+                    // Check if user exists in the system(users)
+                    bool userExists = false;
+                    for (const auto &user : users)
+                    {
+                        if (user.getUsername() == newAdmin)
+                        {
+                            userExists = true;
+                            break;
+                        }
+                    }
+
+                    if (!userExists)
+                    {
+                        cout << "Error: User does not exist.\n";
+                        break;
+                    }
+
+                    // Check if the user is a participant in the group(so the user exists and a participant)
+                    const vector<string> &participants = groupChat->getParticipants();
+                    bool found = false;
+                    for (int i = 0; i < participants.size(); i++)
+                    {
+                        if (participants[i] == newAdmin)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        cout << "Error: User is not a participant in the group.\n";
+                        break;
+                    }
+                    // {
+                    //    cout << "Error: User is not a participant in the group.\n";
+                    //  break;
+                    //}
+
+                    // Add admin
+                    groupChat->addAdmin(newAdmin);
+                    cout << "Admin added.\n";
+                }
+                else
+                {
+                    cout << "Invalid choice.\n";
+                }
+                break;
+            }
+
+            case 4:
+            { // Set description
+                if (isGroup && isAdmin)
+                {
+                    GroupChat *groupChat = dynamic_cast<GroupChat *>(selectedChat);
+                    string desc;
+                    cout << "Enter new description: ";
+                    cin >> ws;
+                    getline(cin, desc);
+                    groupChat->setDescription(desc);
+                    cout << "Description set.\n";
+                }
+                else
+                {
+                    cout << "Invalid choice.\n";
+                }
+                break;
+            }
+
+            case 5:
+            { // Remove participant
+                if (isGroup && isAdmin)
+                {
+                    GroupChat *groupChat = dynamic_cast<GroupChat *>(selectedChat);
+                    string userToRemove;
+                    cout << "Enter username to remove: ";
+                    cin >> ws;
+                    getline(cin, userToRemove);
+
+                    if (groupChat->removeParticipant(loggedInUser, userToRemove))
+                    {
+                        cout << "Participant removed.\n";
+                    }
+                    else
+                    {
+                        cout << "Failed to remove participant (check user existence).\n";
+                    }
+                }
+                else
+                {
+                    cout << "Invalid choice.\n";
+                }
+                break;
+            }
+
+            default:
+                cout << "Invalid choice.\n";
+            }
         }
     }
 
