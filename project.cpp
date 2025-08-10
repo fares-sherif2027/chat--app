@@ -191,7 +191,7 @@ public:
             content += u8"\U0001F600"; // happy emoji
         else if (emojiCode == 2)
             content += u8"\U0001F602"; // sympathy emoji
-        else if (emojiCode = 3)
+        else if (emojiCode == 3)
             content += u8"\U0001F609"; // heart emoji
         else
             content += u8"\u2764";
