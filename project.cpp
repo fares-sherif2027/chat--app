@@ -78,6 +78,9 @@ public:
     void updateLastSeen()
     {
         // TODO: Implement last seen update
+        time_t timestamp;
+        time(&timestamp);
+        cout << ctime(&timestamp);
     }
 
      bool checkPassword(string pwd) const
