@@ -645,7 +645,7 @@ public:
         members.push_back(getCurrentUsername());
 
         int numMembers;
-        cout << "How many members to add? ";
+        cout << "How many members to add? (don't count yourself): ";
         cin >> numMembers;
 
         for (int i = 0; i < numMembers; i++)
@@ -803,7 +803,7 @@ public:
             case 2:
             { // Delete message
                 int msgIndex;
-                cout << "Enter message index to delete-1: ";
+                cout << "Enter message index to delete: ";
                 cin >> msgIndex;
 
                 if (msgIndex < 0 || msgIndex >= (int)selectedChat->getMessages().size())
